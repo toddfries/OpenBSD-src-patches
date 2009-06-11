@@ -13,7 +13,8 @@ for d in \
         share \
         . \
         usr.bin \
-        usr.sbin
+        usr.sbin \
+	regress
 do
 	if ! [ -d $d/.git ]; then
 		echo "$d/.git does not exist, skipping"
