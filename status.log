@@ -1,5 +1,5 @@
 # On branch master
-# Your branch is ahead of 'origin/master' by 5 commits.
+# Your branch is ahead of 'origin/master' by 6 commits.
 #
 # Changed but not updated:
 #   (use "git add <file>..." to update what will be committed)
@@ -7,5 +7,6 @@
 #
 #	modified:   .gitignore
 #	modified:   status.log
+#	modified:   up.log
 #
 no changes added to commit (use "git add" and/or "git commit -a")
