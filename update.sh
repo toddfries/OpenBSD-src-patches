@@ -17,8 +17,13 @@ for d in \
 	regress
 do
 	if ! [ -d $d/.git ]; then
-		echo "$d/.git does not exist, skipping"
-		continue
+		if [ -d $d ]; then
+			echo "$d/.git does not exist, skipping"
+			continue
+		fi
+		reference=""
+		[ -d "$HOME/git/OpenBSD/$d.master" ] && reference="--reference $HOME/git/OpenBSD/$d.master"
+		git clone $reference ssh://afs0.freedaemon.com/afs/freedaemon.com/code/OpenBSD/git/src/$d
 	fi
 	echo "==> $d"
 	(
