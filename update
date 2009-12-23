@@ -14,7 +14,8 @@ for d in \
         . \
         usr.bin \
         usr.sbin \
-	regress
+	regress \
+	/usr/ports
 do
 	if ! [ -d $d/.git ]; then
 		if [ -d $d ]; then
@@ -34,4 +35,4 @@ do
 		# master, let git deal with it
 		git merge origin/master
 	)
-done 2>&1 | tee update.log
+done 2>&1 | tee .git/update.log
