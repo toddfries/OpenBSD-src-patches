@@ -1,5 +1,6 @@
-for d in \
-        etc \
+#!/bin/sh
+
+list="etc \
         include \
         libexec \
         bin \
@@ -15,7 +16,12 @@ for d in \
         usr.bin \
         usr.sbin \
 	regress \
-	/usr/ports
+	/usr/ports"
+if [ "$1" ]; then
+	list="$@"
+fi
+
+for d in $list
 do
 	if ! [ -d $d/.git ]; then
 		if [ -d $d ]; then
