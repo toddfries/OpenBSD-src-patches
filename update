@@ -39,6 +39,13 @@ do
 		# Yes this might be redundant because we might be on master,
 		# but no harm if it is, and easier than attempting to detect
 		# master, let git deal with it
-		git merge origin/master
-	)
-done 2>&1 | tee .git/update.log
+		git merge origin/master 
+		git branch | egrep "^\*"
+	) 2>&1 | awk '
+	BEGIN { startmergeblurb=0 }
+	/^Already up-to-date/{next}
+	/^You asked me to pull/{startmergeblurb=1;next}
+	/^See git-config/{startmergeblurb=0;next}
+	{if (startmergeblurb == 0) { print $0 } }'
+done 2>&1 \
+	| tee .git/update.log
