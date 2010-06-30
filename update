@@ -16,7 +16,8 @@ list="etc \
         usr.bin \
         usr.sbin \
 	regress \
-	/usr/ports"
+	/usr/ports \
+	/usr/xenocara"
 if [ "$1" ]; then
 	list="$@"
 fi
