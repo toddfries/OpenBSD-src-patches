@@ -18,6 +18,32 @@ list="etc \
 	regress \
 	/usr/ports \
 	/usr/xenocara"
+
+if [ "$1" = "-q" ]; then
+	# quick version..
+	gitupdate() {
+	    (
+		cd $d
+		git pull
+		# Yes this might be redundant because we might be on master,
+		# but no harm if it is, and easier than attempting to detect
+		# master, let git deal with it
+		git merge origin/master 
+		git branch | egrep "^\*"
+	    ) 
+	}
+	shift
+else
+	gitupdate() {
+	    (
+		cd $d
+		current_branch=$(git branch | awk '/^\*/{print $2}')
+		mergeall
+		git checkout $current_branch
+	    ) 
+	}
+fi
+
 if [ "$1" ]; then
 	list="$@"
 fi
@@ -34,15 +60,8 @@ do
 		git clone $reference ssh://afs0.freedaemon.com/afs/freedaemon.com/code/OpenBSD/git/src/$d
 	fi
 	echo "==> $d"
-	(
-		cd $d
-		git pull
-		# Yes this might be redundant because we might be on master,
-		# but no harm if it is, and easier than attempting to detect
-		# master, let git deal with it
-		git merge origin/master 
-		git branch | egrep "^\*"
-	) 2>&1 | awk '
+	gitupdate
+2>&1 | awk '
 	BEGIN { startmergeblurb=0 }
 	/^Already up-to-date/{next}
 	/^You asked me to pull/{startmergeblurb=1;next}
