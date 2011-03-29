@@ -1,11 +1,11 @@
 #!/bin/sh
 
 list="etc \
+        sys \
         include \
         libexec \
         bin \
         sbin \
-        sys \
         distrib \
         games \
         gnu \
