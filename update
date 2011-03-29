@@ -36,9 +36,9 @@ if [ "$1" = "-q" ]; then
 else
 	gitupdate() {
 	    (
-		cd $d
-		current_branch=$(git branch | awk '/^\*/{print $2}')
-		mergeall
+		cd $d && \
+		current_branch=$(git branch | awk '/^\*/{print $2}') && \
+		time mergeall &&
 		git checkout $current_branch
 	    ) 
 	}
@@ -59,7 +59,8 @@ do
 		[ -d "$HOME/git/OpenBSD/$d.master/.git" ] && reference="--reference $HOME/git/OpenBSD/$d.master/.git"
 		git clone $reference ssh://afs0.freedaemon.com/afs/freedaemon.com/code/OpenBSD/git/src/$d
 	fi
-	echo "==> $d"
+	prefix="$d>"
+	{
 	gitupdate
 2>&1 | awk '
 	BEGIN { startmergeblurb=0 }
@@ -67,5 +68,6 @@ do
 	/^You asked me to pull/{startmergeblurb=1;next}
 	/^See git-config/{startmergeblurb=0;next}
 	{if (startmergeblurb == 0) { print $0 } }'
+	} 2>&1 | while read line; do echo "$prefix $line"; done
 done 2>&1 \
 	| tee .git/update.log
