@@ -22,6 +22,8 @@ list="etc \
 if [ "$1" = "-q" ]; then
 	# quick version..
 	gitupdate() {
+		local d="$1"
+		[ -d "$d/." ] || return
 	    (
 		cd $d
 		git pull
@@ -35,6 +37,8 @@ if [ "$1" = "-q" ]; then
 	shift
 else
 	gitupdate() {
+		local d="$1"
+		[ -d "$d/." ] || return
 	    (
 		cd $d && \
 		current_branch=$(git branch | awk '/^\*/{print $2}') && \
@@ -61,7 +65,7 @@ do
 	fi
 	prefix="$d>"
 	{
-	gitupdate
+	gitupdate "$d"
 2>&1 | awk '
 	BEGIN { startmergeblurb=0 }
 	/^Already up-to-date/{next}
