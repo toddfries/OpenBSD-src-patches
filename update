@@ -1,8 +1,10 @@
 #!/bin/sh
 
 list="etc \
+        share \
         sys \
         include \
+        lib \
         libexec \
         bin \
         sbin \
@@ -10,8 +12,6 @@ list="etc \
         games \
         gnu \
         kerberosV \
-        lib \
-        share \
         . \
         usr.bin \
         usr.sbin \
