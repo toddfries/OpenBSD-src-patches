@@ -61,7 +61,7 @@ do
 		fi
 		reference=""
 		[ -d "$HOME/git/OpenBSD/$d.master/.git" ] && reference="--reference $HOME/git/OpenBSD/$d.master/.git"
-		cmd="git clone $reference ssh://afs0.freedaemon.com/afs/freedaemon.com/code/OpenBSD/git/src/$d"
+		cmd="git clone $reference ssh://afs1.freedaemon.com/afs/freedaemon.com/code/OpenBSD/git/src/$d"
 		echo "==> $cmd"
 		$cmd
 	fi
