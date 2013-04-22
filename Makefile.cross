@@ -1,4 +1,4 @@
-# $OpenBSD: Makefile.cross,v 1.60 2013/02/02 13:38:41 miod Exp $
+# $OpenBSD: Makefile.cross,v 1.64 2013/04/04 10:45:33 jasper Exp $
 
 cross-tools:	cross-includes cross-binutils cross-gcc cross-lib
 cross-distrib:	cross-tools cross-bin cross-share cross-sys cross-etc-root-var
@@ -7,7 +7,6 @@ cross-distrib:	cross-tools cross-bin cross-share cross-sys cross-etc-root-var
 # Have to compute TARGET_ARCH directly in the Makefile, for .if tests involving
 # this variable to work.
 .if	(${TARGET} == "armish" || ${TARGET} == "beagle" || \
-	 ${TARGET} == "gumstix" || ${TARGET} == "palm" || \
 	 ${TARGET} == "zaurus")
 TARGET_ARCH=	arm
 .elif	(${TARGET} == "hp300" || ${TARGET} == "mvme68k")
@@ -51,11 +50,6 @@ MACHINE_IS_LP64 =
 CROSSCFLAGS?=	${CROSSCPPFLAGS} -O2 ${PIPE} ${DEBUG}
 CROSSCXXFLAGS?=	${CROSSCPPFLAGS}
 #LDSTATIC?=	-static
-
-# XXX
-BINMODE?=555
-BINOWN?=root
-BINGRP?=bin
 
 CROSSDIR=	${DESTDIR}/usr/cross/${TARGET}
 CROSSENV=	AR=${CROSSDIR}/usr/${TARGET_CANON}/bin/ar \
@@ -103,6 +97,15 @@ COMPILER_VERSION=gcc3
 BINUTILS_VERSION=binutils-2.17
 .else
 BINUTILS_VERSION=binutils
+.endif
+
+.if !empty(PIE_ARCH:M${_arch})
+NOPIE_FLAGS=-fno-pie
+NOPIE_LDFLAGS=-nopie
+PIE_DEFAULT=${DEFAULT_PIE_DEF}
+.else
+NOPIE_FLAGS=
+PIE_DEFAULT=
 .endif
 
 .if !empty(OLD_BINUTILS_ARCH:M${_arch})
@@ -198,17 +201,17 @@ ${CROSSINCLUDES}:	${CROSSOBJ}
 ${CROSSBINUTILS}:	${CROSSINCLUDES}
 	(cd ${.CURDIR}/${BINUTILS_DIR}; \
 	    MAKEOBJDIR=obj.${MACHINE}.${TARGET} \
-	    USING_NEW_BINUTILS=${NEW_BINUTILS} \
+	    USING_NEW_BINUTILS=${NEW_BINUTILS} PIE_DEFAULT=${PIE_DEFAULT} \
 	    TARGET_ARCH=${TARGET_ARCH} TARGET_CPU=${TARGET_CPU} \
 	    PATH=${CROSSPATH} \
 	    ${MAKE} -f Makefile.bsd-wrapper depend && \
 	    MAKEOBJDIR=obj.${MACHINE}.${TARGET} \
-	    USING_NEW_BINUTILS=${NEW_BINUTILS} \
+	    USING_NEW_BINUTILS=${NEW_BINUTILS} PIE_DEFAULT=${PIE_DEFAULT} \
 	    TARGET_ARCH=${TARGET_ARCH} TARGET_CPU=${TARGET_CPU} \
 	    ${MAKE} -f Makefile.bsd-wrapper all && \
 	    DESTDIR=${CROSSDIR} MAKEOBJDIR=obj.${MACHINE}.${TARGET} \
 	    COMPILER_VERSION=${COMPILER_VERSION} \
-	    USING_NEW_BINUTILS=${NEW_BINUTILS} \
+	    USING_NEW_BINUTILS=${NEW_BINUTILS} PIE_DEFAULT=${PIE_DEFAULT} \
 	    MAKEOBJDIR=obj.${MACHINE}.${TARGET} \
 	    USING_NEW_BINUTILS=${NEW_BINUTILS} \
 	    TARGET_ARCH=${TARGET_ARCH} TARGET_CPU=${TARGET_CPU} \
