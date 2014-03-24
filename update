@@ -60,8 +60,8 @@ do
 			continue
 		fi
 		reference=""
-		[ -d "$HOME/git/OpenBSD/$d.master/.git" ] && reference="--reference $HOME/git/OpenBSD/$d.master/.git"
-		cmd="git clone $reference ssh://afs1.freedaemon.com/afs/freedaemon.com/code/OpenBSD/git/src/$d"
+		#[ -d "$HOME/git/OpenBSD/$d.master/.git" ] && reference="--reference $HOME/git/OpenBSD/$d.master/.git"
+		cmd="git clone $reference git@github.com:toddfries/OpenBSD-${d}-patches $d"
 		echo "==> $cmd"
 		$cmd
 	fi
